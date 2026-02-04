@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For My Eli 💖</title>
+
+<style>
+/* 1️⃣ GLOBAL MOBILE OPTIMIZATION */
+* {
+  box-sizing: border-box;
+  font-family: 'Comic Sans MS', cursive;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #ffc1d9, #ffe4ec);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+section {
+  width: 100%;
+  min-height: 100vh;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  animation: cinematicFade 0.8s ease-out;
+}
+
+@keyframes cinematicFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 2️⃣ TYPOGRAPHY */
+h1 { font-size: 2.2rem; color: #ff4d6d; margin-bottom: 15px; text-shadow: 2px 2px 0 white; line-height: 1.2; }
+p { font-size: 1.2rem; color: #555; margin-bottom: 25px; line-height: 1.5; }
+
+/* 3️⃣ BUTTONS */
+button {
+  border: none;
+  padding: 18px 25px;
+  border-radius: 50px;
+  background: #ff8fab;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(255, 143, 171, 0.4);
+  transition: 0.3s;
+  width: 90%; 
+  max-width: 350px;
+  margin-bottom: 20px;
+}
+button:active { transform: scale(0.95); }
+.btn-main { background: #ff4d6d; }
+
+/* 4️⃣ GAME SYSTEMS */
+.grid, .memory-grid { display: grid; gap: 10px; width: 95vw; max-width: 360px; margin: 20px auto; }
+.grid { grid-template-columns: repeat(5, 1fr); }
+.memory-grid { grid-template-columns: repeat(4, 1fr); }
+
+.cell, .card {
+  aspect-ratio: 1/1; background: white; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; box-shadow: 0 4px 0 #ddd;
+}
+.card { aspect-ratio: 3/4; background: #ff8fab; color: transparent; transition: 0.4s; }
+.card.flipped { background: white; color: initial; transform: rotateY(180deg); }
+
+/* 5️⃣ PHOTO & SURAT BOX */
+.photo { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 6px solid white; margin-bottom: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+#surat-box { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 30px 20px; border-radius: 25px; width: 95%; max-width: 400px; }
+#surat-text { font-size: 1.15rem; line-height: 1.8; color: #333; text-align: left; }
+
+/* 🎁 GIFT ANIMATION */
+#page-1 { display: flex; }
+.gift-container { animation: float 3s infinite ease-in-out; cursor: pointer; }
+.gift { width: 160px; height: 130px; background: #ff6f91; border-radius: 15px; position: relative; }
+.gift::before { content: ''; position: absolute; width: 110%; height: 25px; background: #ff4d6d; top: -18px; left: -5%; border-radius: 10px; }
+.bow { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 70px; height: 35px; background: #ff4d6d; border-radius: 50px; }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+</style>
+</head>
+
+<body>
+
+<audio id="bgm" src="sky.mp3" loop></audio>
+<audio id="typingSound" src="typing.mp3"></audio>
+
+<section id="page-1">
+  <div class="gift-container" onclick="openGift()">
+    <div class="gift"><div class="bow"></div></div>
+    <p style="margin-top:40px; color:#ff4d6d; font-weight:bold; font-size: 1.3rem;">TAP UNTUK MEMBUKA 💖</p>
+  </div>
+</section>
+
+<section id="page-2">
+  <h1>Hai Eli... 😊</h1>
+  <p>Maafin aku ya buat semalam. Aku punya sesuatu buat kamu:</p>
+  <button class="btn-main" onclick="showGift()">Penebus Dosa 🎁</button>
+  <button onclick="startBomb()">Game Bom 💣</button>
+  <button onclick="startMemory()">Memory Game 🧩</button>
+</section>
+
+<section id="page-bomb">
+  <h1>Cari yang Aman 💣</h1>
+  <p>Hati-hati, ada 4 bom tersembunyi!</p>
+  <div class="grid" id="bombGrid"></div>
+  <button onclick="backMenu()" style="background:#aaa; width:60%; font-size:0.9rem;">Nyerah / Kembali</button>
+</section>
+
+<section id="page-memory">
+  <h1>Buktikan Fokusmu! 🧠</h1>
+  <div id="livesDisplay" style="font-size: 1.5rem; margin-bottom: 20px; color: #ff4d6d;">Nyawa: ❤️❤️❤️</div>
+  <div class="memory-grid" id="memoryGrid"></div>
+  <button onclick="backMenu()" style="background:#aaa; width:60%; font-size:0.9rem;">Nyerah / Kembali</button>
+</section>
+
+<section id="page-nyanyi">
+  <h1>Yeay Menang! 🎉</h1>
+  <p>Aku bakal nyanyiin <b>2 lagu</b> sebagai permintaan maaf 🎶</p>
+  <button onclick="backMenu()">Balik ke Menu 💗</button>
+</section>
+
+<section id="page-ganteng">
+  <h1>😎 PENAWAR NGAMBEK</h1>
+  <p>Tatap 5 detik biar keselnya ilang:</p>
+  <img src="ganteng.jpg" class="photo">
+  <button onclick="backMenu()">Udah nggak ngambek 💗</button>
+</section>
+
+<section id="page-gift">
+  <img src="eli.jpg" class="photo">
+  <div id="surat-box">
+    <div id="surat-text"></div>
+  </div>
+  <div id="coupon-area" style="display:none; margin-top:25px; width: 100%;">
+    <button class="btn-main" onclick="alert('Kupon Berhasil Diklaim! Kirim screenshot ini ke aku ya ❤️')">🎟️ KLAIM KUPON ANTI-NGAMBEK</button>
+  </div>
+  <br>
+  <button onclick="backMenu()">Kembali 💗</button>
+</section>
+
+<script>
+const pages = document.querySelectorAll("section");
+const bgm = document.getElementById("bgm");
+const typingSound = document.getElementById("typingSound");
+const nomorWA = "6283129486122"; 
+let typingTimeout;
+
+function showPage(id) {
+  pages.forEach(p => p.style.display = "none");
+  document.getElementById(id).style.display = "flex";
+  window.scrollTo(0, 0);
+}
+
+function openGift() {
+  bgm.volume = 0; bgm.play().catch(()=>{});
+  let v = 0; let fade = setInterval(() => { v += 0.05; bgm.volume = Math.min(v, 1); if (v >= 1) clearInterval(fade) }, 200);
+  showPage("page-2");
+}
+
+function backMenu() { showPage("page-2"); }
+
+/* 💣 GAME BOM SYSTEM */
+function startBomb() {
+  showPage("page-bomb");
+  const grid = document.getElementById("bombGrid");
+  grid.innerHTML = "";
+  const bombIndices = [];
+  while(bombIndices.length < 4) {
+    let r = Math.floor(Math.random() * 25);
+    if(!bombIndices.includes(r)) bombIndices.push(r);
+  }
+  let safeFound = 0;
+  for (let i = 0; i < 25; i++) {
+    const c = document.createElement("div");
+    c.className = "cell";
+    c.onclick = () => {
+      if (c.clicked) return;
+      c.clicked = true;
+      if (bombIndices.includes(i)) {
+        c.textContent = "💣"; c.style.background = "#333";
+        setTimeout(() => {
+          const mauPap = confirm("Yahh kamu kalah! 😝 Kamu harus ngasih aku 3 pap lucuuu 😆\n\nKlik 'OK' buat kirim pap, atau 'Cancel' buat balik ke menu.");
+          if (mauPap) {
+            window.location.href = `https://wa.me/${nomorWA}?text=${encodeURIComponent("Halo sayang, aku kalah main game bom.. Ini 3 pap lucu aku sesuai janji! 🙈💖")}`;
+          } else { backMenu(); }
+        }, 500);
+      } else {
+        c.textContent = "💖"; c.style.background = "#ffc2d1";
+        safeFound++; if (safeFound === 21) setTimeout(() => showPage("page-nyanyi"), 500);
+      }
+    };
+    grid.appendChild(c);
+  }
+}
+
+/* 🧠 MEMORY GAME SYSTEM */
+let memoryLives = 3;
+function startMemory() {
+  showPage("page-memory");
+  memoryLives = 3; updateLives();
+  const grid = document.getElementById("memoryGrid");
+  grid.innerHTML = "";
+  const icons = ['🌸','🌸','🎀','🎀','⭐','⭐','🍭','🍭','🍦','🍦','🎈','🎈','🐱','🐱','🧸','🧸'];
+  const shuffled = icons.sort(() => Math.random() - 0.5);
+  let openCards = [];
+  shuffled.forEach(icon => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.icon = icon;
+    card.onclick = () => {
+      if (openCards.length === 2 || card.classList.contains("flipped")) return;
+      card.textContent = icon; card.classList.add("flipped");
+      openCards.push(card);
+      if (openCards.length === 2) {
+        if (openCards[0].dataset.icon === openCards[1].dataset.icon) {
+          openCards = [];
+          if (document.querySelectorAll(".card.flipped").length === 16) setTimeout(() => showPage("page-ganteng"), 500);
+        } else {
+          memoryLives--; updateLives();
+          setTimeout(() => {
+            if (memoryLives <= 0) {
+              const mauVC = confirm("Yahh kamu kalah! 🤪 Sebagai hukumannya, kamu harus VC sama aku sekarang! 😆\n\nKlik 'OK' buat ayo VC, atau 'Cancel' buat balik ke menu.");
+              if (mauVC) {
+                window.location.href = `https://wa.me/${nomorWA}?text=${encodeURIComponent("Halo sayang, aku kalahhh ayo VC 😘")}`;
+              } else { backMenu(); }
+            } else {
+              openCards.forEach(c => { c.textContent = ""; c.classList.remove("flipped"); });
+              openCards = [];
+            }
+          }, 500);
+        }
+      }
+    };
+    grid.appendChild(card);
+  });
+}
+function updateLives() { document.getElementById("livesDisplay").textContent = "Nyawa: " + "❤️".repeat(memoryLives); }
+
+/* ✉️ SURAT PENEBUS DOSA */
+function showGift() {
+  showPage("page-gift");
+  document.getElementById("coupon-area").style.display = "none";
+  const text = `Hai Eli Sayang... 💖
+
+Aku tahu tadi malam mungkin nggak sesuai ekspektasi kamu, dan aku minta maaf banget ya buat itu. Maafin aku yang kadang kurang peka pas momen spesial kamu... 🥺
+
+Tapi semaleman aku kepikiran dan akhirnya bikin ini sebagai penebus dosa. Aku nggak mau hari ini kamu masih mendung gara-gara aku.
+
+Sebagai gantinya, kamu berhak dapet:
+1. Satu hari bebas marah (aku pasrah) 😤
+2. Makan enak pilihan kamu sepuasnya 🍦
+3. Pelukan paling lama pas kita ketemu 🫂
+
+Jangan ngambek lagi ya? I love you, Eli! 😁`;
+  typeWriter(text, "surat-text", 60);
+}
+
+function typeWriter(text, id, speed) {
+  clearTimeout(typingTimeout);
+  const el = document.getElementById(id);
+  el.innerHTML = ""; let i = 0;
+  function type() {
+    if (i < text.length) {
+      el.innerHTML += text[i] === "\n" ? "<br>" : text[i];
+      typingSound.currentTime = 0; typingSound.play().catch(()=>{});
+      i++; typingTimeout = setTimeout(type, speed);
+    } else { document.getElementById("coupon-area").style.display = "block"; }
+  }
+  type();
+}
+</script>
+</body>
+</html>
